@@ -1,5 +1,6 @@
 package com.tatenergo.pushkin
 
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,9 @@ class MainActivity : AppCompatActivity() {
         const val COUNT_INDEX = "Index" // const key to save/read value from bundle
         const val TAG = "MainActivity"
     }
+
+    lateinit var sp: SharedPreferences
+    lateinit var editor: SharedPreferences.Editor
 
     val stih: List<String> = listOf<String>(
         "1. Ты видел деву на скале",
@@ -24,53 +28,56 @@ class MainActivity : AppCompatActivity() {
         "11.Но верь мне: дева на скале",
         "12.Прекрасней волн, небес и бури."
     )
-    var index: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (savedInstanceState!=null)
-            index = savedInstanceState!!.getInt(COUNT_INDEX)
-        Log.d(TAG, "onCreate:  " +stih[if (index == stih.count()) 0 else index])
-        index++
-    }
+        sp = this.getSharedPreferences("PushkinApp", MODE_PRIVATE)
+        editor = sp.edit()
 
-    override fun onSaveInstanceState(savedInstanceState: Bundle) {
-        super.onSaveInstanceState(savedInstanceState)
-        savedInstanceState.putInt(COUNT_INDEX, index)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        index = savedInstanceState.getInt(COUNT_INDEX)
+        toLog("onCreate  ")
     }
 
     override fun onResume() {
         super.onResume()
-        Log.d(TAG, "onResume:  " +stih[if (index == stih.count()) 0 else index])
-        index++
+        toLog("onResume  ")
     }
 
     override fun onStart() {
         super.onStart()
-        Log.d(TAG, "onStart:   " +stih[if (index == stih.count()) 0 else index])
-        index++
+        toLog("onStart   ")
     }
 
     override fun onPause() {
         super.onPause()
-        Log.d(TAG, "onPause:   " +stih[if (index == stih.count()) 0 else index])
-        index++
+        toLog("onPause   ")
     }
 
     override fun onStop() {
         super.onStop()
-        Log.d(TAG, "onStop:    " +stih[if (index == stih.count()) 0 else index])
-        index++
+        toLog("onStop    ")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(TAG, "onDestroy: " +stih[if (index == stih.count()) 0 else index])
+        toLog("onDestroy ")
+    }
+
+    fun toLog(event: String) {
+        var index = getSavedIndex()
+        if (index>=stih.count())
+            index=0
+        Log.d(TAG, event + stih[index])
         index++
+        saveIndex(index)
+    }
+
+    fun saveIndex(value: Int) {
+        editor?.putInt(COUNT_INDEX, value)
+        editor?.commit()
+    }
+
+    fun getSavedIndex(): Int {
+        return sp?.getInt(COUNT_INDEX, 0) ?: 0
     }
 }
