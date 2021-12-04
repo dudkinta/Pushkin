@@ -12,5 +12,29 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:textViewStyle">@style/Theme.Pushkin.LightTextView</item>
+    </style>
+
+    <style name="Theme.Pushkin.LightTextView" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Theme.Pushkin.Button" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:padding">8dp</item>
+    </style>
+    <style name="Theme.Pushkin.RedButton" parent="Theme.Pushkin.Button">
+        <item name="android:backgroundTint">@color/googleRed</item>
+    </style>
+    <style name="Theme.Pushkin.BlueButton" parent="Theme.Pushkin.Button">
+        <item name="android:backgroundTint">@color/googleBlue</item>
+    </style>
+    <style name="Theme.Pushkin.GreenButton" parent="Theme.Pushkin.Button">
+        <item name="android:backgroundTint">@color/googleGreen</item>
+    </style>
+    <style name="Theme.Pushkin.YellowButton" parent="Theme.Pushkin.Button">
+        <item name="android:backgroundTint">@color/googleYellow</item>
     </style>
 </resources>
