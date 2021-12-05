@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             .commit()
         val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
-        bottomNavigation.setOnNavigationItemSelectedListener { item ->
+        bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.gotoFragment1 -> {
                     currentFragment = 1
