@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Pushkin</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="text_label_fragment_1">Фрагмент 1</string>
+    <string name="text_label_fragment_2">Фрагмент 2</string>
 </resources>

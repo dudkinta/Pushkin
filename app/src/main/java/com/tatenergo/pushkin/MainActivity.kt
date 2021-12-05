@@ -4,6 +4,8 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.google.android.material.bottomnavigation.BottomNavigationView
+
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -13,7 +15,9 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var sp: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
-
+    private lateinit var fragment1: ButtonsFragment
+    private lateinit var fragment2: ButtonsFragment
+    private var currentFragment: Int = 1
     val stih: List<String> = listOf<String>(
         "1. Ты видел деву на скале",
         "2. В одежде белой над волнами",
@@ -34,12 +38,66 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         sp = this.getSharedPreferences("PushkinApp", MODE_PRIVATE)
         editor = sp.edit()
+        fragment1 = ButtonsFragment.newInstance("frag1", "param fragment 1")
+        fragment2 = ButtonsFragment.newInstance("frag2", "param fragment 2")
+
+        if (savedInstanceState != null) {
+            currentFragment = savedInstanceState.getInt("currentFragment")
+        }
+        supportFragmentManager
+            .beginTransaction()
+            .replace(
+                R.id.fragmentView,
+                when (currentFragment) {
+                    2 -> fragment2
+                    else -> fragment1
+                }
+            )
+            .commit()
+        val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+
+        bottomNavigation.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.gotoFragment1 -> {
+                    currentFragment = 1
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.fragmentView, fragment1)
+                        .commit()
+                    true
+                }
+                R.id.gotoFragment2 -> {
+                    currentFragment = 2
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.fragmentView, fragment2)
+                        .commit()
+                    true
+                }
+                else -> false
+            }
+        }
 
         toLog("onCreate  ")
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState?.putInt("currentFragment", currentFragment)
+    }
+
     override fun onResume() {
         super.onResume()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(
+                R.id.fragmentView,
+                when (currentFragment) {
+                    2 -> fragment2
+                    else -> fragment1
+                }
+            )
+            .commit()
         toLog("onResume  ")
     }
 
@@ -63,21 +121,21 @@ class MainActivity : AppCompatActivity() {
         toLog("onDestroy ")
     }
 
-    fun toLog(event: String) {
+    private fun toLog(event: String) {
         var index = getSavedIndex()
-        if (index>=stih.count())
-            index=0
+        if (index >= stih.count())
+            index = 0
         Log.d(TAG, event + stih[index])
         index++
         saveIndex(index)
     }
 
-    fun saveIndex(value: Int) {
+    private fun saveIndex(value: Int) {
         editor?.putInt(COUNT_INDEX, value)
         editor?.commit()
     }
 
-    fun getSavedIndex(): Int {
+    private fun getSavedIndex(): Int {
         return sp?.getInt(COUNT_INDEX, 0) ?: 0
     }
 }
